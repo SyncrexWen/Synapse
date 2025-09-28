@@ -1,11 +1,12 @@
 from threading import Lock
 from types import SimpleNamespace
 from core.config_manager import config_read, config_dump
+from typing import Callable, List, Any, Dict
 
 
 class Config:
     _instance = None
-    _observers = []
+    _observers: List[Callable[[], None]] = []
     _initialized = False
     _lock = Lock()
 
@@ -36,39 +37,27 @@ class Config:
         for cb in self._observers:
             cb()
 
-    def register(self, callback):
+    def register(self, callback: Callable[[], None]):
         '''Register a callback to be called on config change'''
         self._observers.append(callback)
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str):
         return getattr(self.data, item)
 
-    def __setattr__(self, key, value):
+    def __setattr__(self, key: str, value: Any):
         if key in ("_instance", "_observers", "data"):
             super().__setattr__(key, value)
         else:
             setattr(self.data, key, value)
             self._notify()
 
-def dict2ns(d: dict) -> SimpleNamespace:
+def dict2ns(d: dict[str, Any]) -> SimpleNamespace:
     '''Convert dict to SimpleNamespace recursively'''
-    if isinstance(d, dict):
-        return SimpleNamespace(**{k: dict2ns(v) for k, v in d.items()})
-    elif isinstance(d, list):
-        return [dict2ns(i) for i in d]
-    else:
-        return d
+    return SimpleNamespace(**{k: dict2ns(v) for k, v in d.items()})
 
-def ns2dict(ns):
+def ns2dict(ns: SimpleNamespace) -> Dict[str, Any]:
     """Convert SimpleNamespace to dict recursively"""
-    if isinstance(ns, SimpleNamespace):
-        return {k: ns2dict(v) for k, v in vars(ns).items()}
-    elif isinstance(ns, list):
-        return [ns2dict(item) for item in ns]
-    elif isinstance(ns, dict):
-        return {k: ns2dict(v) for k, v in ns.items()}
-    else:
-        return ns
+    return {k: ns2dict(v) for k, v in vars(ns).items()}
 
 
 config = Config()

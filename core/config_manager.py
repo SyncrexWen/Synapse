@@ -1,9 +1,8 @@
 import yaml
-import os
 from typing import Dict, Any
 from pathlib import Path
 
-DEFAULT_CONFIG = {
+DEFAULT_CONFIG: Dict[str, Any] = {
     "initialized": True,
     "app": {
         "log_path": "/logs/app.log",

@@ -1,5 +1,4 @@
-import os
-from core.app_state import config
+from core.app_state import config # type: ignore
 
 
 def main():
