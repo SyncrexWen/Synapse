@@ -1,4 +1,9 @@
+import os
+from core.app_state import config
+
+
 def main():
+
     print("Hello from synapse!")
 
 

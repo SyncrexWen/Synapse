@@ -8,3 +8,15 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Test files
+test*
+
+# Config files
+*.yaml
+
+# Databases
+*.db
+
+# Log files
+*.log
