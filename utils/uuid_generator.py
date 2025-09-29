@@ -2,7 +2,7 @@ import uuid
 from pathlib import Path
 from typing import Tuple
 
-def generate_uuid(file_path: str) -> Tuple[str, str]:
+def generate_uuid(file_path: str) -> Tuple[int, str]:
     '''Generate a random UUID string'''
     path = Path(file_path)
     # Check if file exists
@@ -13,4 +13,4 @@ def generate_uuid(file_path: str) -> Tuple[str, str]:
     # Generate random UUID
     unique_id = uuid.uuid4()
 
-    return str(unique_id), file_name
+    return unique_id.int, file_name
